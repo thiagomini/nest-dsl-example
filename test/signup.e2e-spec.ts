@@ -25,4 +25,15 @@ describe('Signup (e2e)', () => {
       })
       .expect(400);
   });
+
+  test("/signup (POST) returns 400 when password and confirmation don't match", () => {
+    return request(app.getHttpServer())
+      .post('/iam/signup')
+      .send({
+        email: 'mail@mail.com',
+        password: 'password',
+        passwordConfirmation: 'password-different',
+      })
+      .expect(400);
+  });
 });
