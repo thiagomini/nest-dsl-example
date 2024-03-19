@@ -1,7 +1,7 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from './../src/app.module';
+import { dsl } from './dsl/dsl';
 
 describe('Signup (e2e)', () => {
   let app: INestApplication;
@@ -16,9 +16,8 @@ describe('Signup (e2e)', () => {
   });
 
   test('/signup (POST) returns 400 when email is invalid', () => {
-    return request(app.getHttpServer())
-      .post('/iam/signup')
-      .send({
+    return dsl(app)
+      .iam.signup({
         email: 'invalid-email',
         password: 'password',
         passwordConfirmation: 'password',
@@ -27,9 +26,8 @@ describe('Signup (e2e)', () => {
   });
 
   test("/signup (POST) returns 400 when password and confirmation don't match", () => {
-    return request(app.getHttpServer())
-      .post('/iam/signup')
-      .send({
+    return dsl(app)
+      .iam.signup({
         email: 'mail@mail.com',
         password: 'password',
         passwordConfirmation: 'password-different',
@@ -38,9 +36,8 @@ describe('Signup (e2e)', () => {
   });
 
   test('/signup (POST) returns 201 and access token when email and password are valid', async () => {
-    return request(app.getHttpServer())
-      .post('/iam/signup')
-      .send({
+    return dsl(app)
+      .iam.signup({
         email: 'mail@mail.com',
         password: 'password',
         passwordConfirmation: 'password',
@@ -53,15 +50,14 @@ describe('Signup (e2e)', () => {
   });
 
   test('/signup (POST) returns 409 when email is in use', async () => {
-    await request(app.getHttpServer()).post('/iam/signup').send({
+    await dsl(app).iam.signup({
       email: 'mail@mail.com',
       password: 'password',
       passwordConfirmation: 'password',
     });
 
-    return request(app.getHttpServer())
-      .post('/iam/signup')
-      .send({
+    return dsl(app)
+      .iam.signup({
         email: 'mail@mail.com',
         password: 'password',
         passwordConfirmation: 'password',
