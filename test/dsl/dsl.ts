@@ -5,3 +5,5 @@ export const dsl = (app: INestApplication) =>
   Object.freeze({
     iam: iam(app),
   });
+
+export type DSL = ReturnType<typeof dsl>;
