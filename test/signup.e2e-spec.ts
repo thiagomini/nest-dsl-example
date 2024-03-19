@@ -36,4 +36,19 @@ describe('Signup (e2e)', () => {
       })
       .expect(400);
   });
+
+  test('/signup (POST) returns 201 and access token when email and password are valid', async () => {
+    return request(app.getHttpServer())
+      .post('/iam/signup')
+      .send({
+        email: 'mail@mail.com',
+        password: 'password',
+        passwordConfirmation: 'password',
+      })
+      .expect(201)
+      .expect('Content-Type', /json/)
+      .expect((response) => {
+        expect(response.body.accessToken).toBeTruthy();
+      });
+  });
 });
