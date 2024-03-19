@@ -51,4 +51,21 @@ describe('Signup (e2e)', () => {
         expect(response.body.accessToken).toBeTruthy();
       });
   });
+
+  test('/signup (POST) returns 409 when email is in use', async () => {
+    await request(app.getHttpServer()).post('/iam/signup').send({
+      email: 'mail@mail.com',
+      password: 'password',
+      passwordConfirmation: 'password',
+    });
+
+    return request(app.getHttpServer())
+      .post('/iam/signup')
+      .send({
+        email: 'mail@mail.com',
+        password: 'password',
+        passwordConfirmation: 'password',
+      })
+      .expect(409);
+  });
 });
